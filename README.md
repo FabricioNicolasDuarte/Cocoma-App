@@ -29,14 +29,18 @@
 Para instalar y ejecutar este proyecto en tu entorno local, sigue estos pasos:
 
 1. **Clonar el Repositorio**  
-   git clone https://github.com/FabricioNicolasDuarte/Cocoma-App.git
-   cd cocoma-app
+   
+  * git clone https://github.com/FabricioNicolasDuarte/Cocoma-App.git
+   
+  * cd cocoma-app
 
 2. **Instalar Dependencias de PHP**  
    composer install
 
 3. Configurar el Entorno  
+   
    Copia el archivo de ejemplo y crea tu propio archivo de entorno.  
+   
    cp .env.example .env
 
    Luego, abre el archivo .env y configura tus variables, especialmente la conexión a la base de datos (DB\_\*) y el nombre de la aplicación.  
