@@ -16,7 +16,7 @@
 </select>
 </div>
 <div>
-<x-input-label for="salary" :value="__('Salario Medio Mensual del Personal ($)')" />
+<x-input-label for="salary" :value="__('Salario Medio Mensual del Personal (U$D)')" />
 <x-text-input wire:model.live="salary" id="salary" class="block mt-1 w-full" type="number" step="100" />
 </div>
 </div>
@@ -38,8 +38,8 @@
                 <span class="text-xl font-mono p-1 bg-slate-700 rounded">{{ $results['main']['avg_staff'] ?? '0.00' }}</span>
             </div>
             <div class="flex justify-between items-center">
-                <span class="font-semibold">Costo Total ($):</span>
-                <span class="text-xl font-mono p-1 bg-green-800/50 rounded text-green-300 font-bold">{{ number_format($results['main']['total_cost'] ?? 0, 2) }}</span>
+                <span class="font-semibold">Costo Total (U$D):</span>
+                <span class="text-xl font-mono p-1 bg-cyan-800 rounded text-white-300 font-bold">{{ number_format($results['main']['total_cost'] ?? 0, 2) }}</span>
             </div>
              <div class="flex justify-between items-center pt-2 border-t border-slate-700 mt-2">
                 <span class="font-semibold">Factor de Ajuste (EAF):</span>
@@ -82,7 +82,7 @@
             <select wire:model.live="costDrivers.{{$key}}" id="driver-{{$key}}" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-slate-900/50 dark:text-gray-300 focus:border-cyan-500 dark:focus:border-cyan-600 focus:ring-cyan-500 dark:focus:ring-cyan-600 rounded-md shadow-sm text-sm">
                 @foreach($driverData['values'] as $value => $multiplier)
                     <option value="{{$value}}">
-                        {{-- ¡CORRECCIÓN APLICADA AQUÍ! --}}
+
                         {{ $optionNames[$value] ?? str_replace('_', ' ', Str::title($value)) }} ({{ number_format($multiplier, 2) }})
                     </option>
                 @endforeach

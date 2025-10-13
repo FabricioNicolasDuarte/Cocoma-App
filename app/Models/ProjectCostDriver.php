@@ -9,7 +9,7 @@ class ProjectCostDriver extends Model
 {
     use HasFactory;
 
-    public $timestamps = false; // Le decimos a Laravel que esta tabla no tiene timestamps
+    public $timestamps = false;
 
     protected $fillable = [
         'project_id',

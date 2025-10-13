@@ -13,26 +13,27 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        {{ __('Inicio') }}
                     </x-nav-link>
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                         {{ __('Mis Proyectos') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
+                        {{ __('Comparador de Proyectos') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('pages.about')" :active="request()->routeIs('pages.about')">
-                        {{ __('Sobre Cocoma') }}
+                        {{ __('Sobre Cocoma App') }}
                     </x-nav-link>
                     <x-nav-link :href="route('pages.developers')" :active="request()->routeIs('pages.developers')">
-                        {{ __('Developers') }}
+                        {{ __('Desarrolladores') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
-                        {{ __('Compare') }}
-                    </x-nav-link>
+
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                {{-- AÑADIMOS relative y z-50 AQUÍ --}}
+
                 <div class="relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">

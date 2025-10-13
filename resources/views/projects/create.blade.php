@@ -39,14 +39,14 @@
                             <x-input-error :messages="$errors->get('kloc')" class="mt-2" />
                         </div>
 
-                        <!-- ¡NUEVO! Campo de Salario Añadido -->
+                        <!-- Salario -->
                         <div class="md:col-span-2">
                             <x-input-label for="salary" :value="__('Salario Medio Mensual del Personal ($)')" />
                             <x-text-input id="salary" class="block mt-1 w-full" type="number" step="0.01" name="salary" :value="old('salary', 0)" />
                             <x-input-error :messages="$errors->get('salary')" class="mt-2" />
                         </div>
 
-                        <!-- Tipo de Modelo COCOMO -->
+                        <!-- Tipo de Modelo COCOMO I -->
                         <div>
                             <x-input-label for="cocomo_model" :value="__('Tipo de Modelo COCOMO')" />
                             <select name="cocomo_model" id="cocomo_model" x-model="cocomoModel" class="block mt-1 w-full border-gray-600 bg-gray-900 text-gray-300 focus:border-cyan-500 focus:ring-cyan-500 rounded-md shadow-sm">
@@ -68,7 +68,7 @@
                         </div>
                     </div>
 
-                    <!-- Sección de Factores de Costo (Aparece condicionalmente) -->
+                    <!-- Sección de Factores de Costo -->
                     <div x-show="cocomoModel === 'intermedio'" x-transition class="mt-8 pt-6 border-t border-slate-700">
                         <h3 class="text-lg font-medium text-gray-100 mb-4">Factores de Costo (Modelo Intermedio)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

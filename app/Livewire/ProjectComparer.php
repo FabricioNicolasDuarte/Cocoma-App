@@ -16,7 +16,7 @@ class ProjectComparer extends Component
     // IDs de los proyectos seleccionados para comparar
     public array $selectedProjects = [];
 
-    // Almacena los salarios para cada proyecto seleccionado (ahora se pre-cargará)
+    // Almacena los salarios para cada proyecto seleccionado
     public array $salaries = [];
 
     // Almacena los resultados de los cálculos
@@ -36,13 +36,11 @@ class ProjectComparer extends Component
         $this->availableProjects = $user ? $user->projects : collect();
     }
 
-    // Hook que se ejecuta cuando la propiedad $selectedProjects cambia.
     public function updatedSelectedProjects()
     {
         $this->recalculate();
     }
 
-    // Hook que se ejecuta cuando la propiedad $salaries cambia.
     public function updatedSalaries()
     {
         $this->recalculate();
@@ -58,21 +56,18 @@ class ProjectComparer extends Component
         $projectsToCompare = $this->availableProjects->whereIn('id', $this->selectedProjects);
 
         foreach ($projectsToCompare as $project) {
-            // --- ¡CORRECCIÓN CLAVE! ---
-            // 1. Usamos el salario del input si el usuario ha escrito algo.
-            // 2. Si no, usamos el salario guardado en el proyecto ($project->salary).
             $salary = (float)($this->salaries[$project->id] ?? $project->salary);
-
-            // 3. Actualizamos el array $salaries para que el input en la vista muestre
-            //    el valor correcto (ya sea el guardado o el que el usuario está escribiendo).
             $this->salaries[$project->id] = $salary;
 
             $costDrivers = $project->cost_drivers ?? [];
-
-            // 4. Calculamos los resultados con el salario correcto.
             $calculation = $this->cocomoService->calculate($project->mode, $project->kloc, $costDrivers, $salary);
 
-            $this->results[$project->id] = $calculation;
+
+            $this->results[$project->id] = [
+                'project' => $project,
+                'calculation' => $calculation,
+            ];
+
         }
     }
 
@@ -81,4 +76,3 @@ class ProjectComparer extends Component
         return view('livewire.project-comparer');
     }
 }
-

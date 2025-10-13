@@ -4,7 +4,7 @@ namespace App\Services;
 
 class CocomoCalculatorService
 {
-    // Constantes del modelo COCOMO I (sin cambios)
+
     private const CONSTANTS = [
         'organic' => ['a' => 2.4, 'b' => 1.05, 'c' => 2.5, 'd' => 0.38],
         'semidetached' => ['a' => 3.0, 'b' => 1.12, 'c' => 2.5, 'd' => 0.35],
@@ -75,12 +75,12 @@ class CocomoCalculatorService
         ],
     ];
 
-     public function getCostDriversDefinition(): array
+    public function getCostDriversDefinition(): array
     {
         return self::COST_DRIVERS_DEFINITION;
     }
 
-    // --- ¡MÉTODO CORREGIDO! ---
+
     public function calculate(string $mode, float $kloc, array $drivers, float $salary = 0): array
     {
         if ($kloc <= 0) {
@@ -98,31 +98,37 @@ class CocomoCalculatorService
 
         $constants = self::CONSTANTS[$mode];
 
-        // ¡CORRECCIÓN CLAVE! Se trunca el EAF a 2 decimales para que coincida con los ejemplos.
+        // 1. Truncar EAF a 2 decimales para el cálculo de Esfuerzo (PM).
         $eaf_for_pm = floor($eaf * 100) / 100;
 
-        // 1. Se calcula PM (Esfuerzo) con el EAF truncado.
+        // 2. Calcular PM y redondearlo. Este valor se usa en los siguientes pasos.
         $pm_unrounded = $constants['a'] * pow($kloc, $constants['b']) * $eaf_for_pm;
-
-        // 2. Se redondea PM y este valor se usará para TODOS los demás cálculos.
         $pm_rounded = round($pm_unrounded, 2);
 
-        // 3. Los cálculos subsecuentes usan el PM ya redondeado.
-        $duration = $constants['c'] * pow($pm_rounded, $constants['d']);
-        $avg_staff = (round($duration, 2) > 0) ? $pm_rounded / round($duration, 2) : 0;
-        $total_cost = $pm_rounded * $salary;
+        // 3. Calcular Duración (TDEV) usando el PM redondeado.
+        $duration_unrounded = $constants['c'] * pow($pm_rounded, $constants['d']);
+        // 4. Truncar la Duración a 2 decimales.
+        $duration_truncated = floor($duration_unrounded * 100) / 100;
+
+        // 5. Calcular Personal Promedio (Staff) usando PM redondeado y Duración truncada.
+        $avg_staff_unrounded = ($duration_truncated > 0) ? $pm_rounded / $duration_truncated : 0;
+        // 6. Truncar Personal a 2 decimales.
+        $avg_staff_truncated = floor($avg_staff_unrounded * 100) / 100;
+
+        // 7. Calcular Costo Total usando el Personal truncado.
+        $total_cost = $avg_staff_truncated * $salary;
 
         return [
             'pm_adjusted' => $pm_rounded,
-            'duration' => round($duration, 2),
-            'avg_staff' => round($avg_staff, 2),
+            'duration' => $duration_truncated,
+            'avg_staff' => $avg_staff_truncated,
             'total_cost' => round($total_cost, 2),
-            'eaf' => round($eaf, 3), // Se muestra el EAF con 3 decimales para precisión visual.
+            'eaf' => round($eaf, 3),
             'eaf_details' => $eafDetails,
         ];
     }
 
-    // --- ¡MÉTODO CORREGIDO! ---
+
     public function calculateAllModes(float $kloc, array $drivers, float $salary = 0): array
     {
         if ($kloc <= 0) {
@@ -138,7 +144,7 @@ class CocomoCalculatorService
             $eafDetails[$driverKey] = $multiplier;
         }
 
-        // ¡CORRECCIÓN CLAVE! Se trunca el EAF a 2 decimales.
+        // 1. Truncar EAF a 2 decimales para el cálculo de Esfuerzo (PM).
         $eaf_for_pm = floor($eaf * 100) / 100;
 
         $results = [];
@@ -147,18 +153,27 @@ class CocomoCalculatorService
         foreach ($modesToCalculate as $currentMode) {
             $constants = self::CONSTANTS[$currentMode];
 
-            // Se aplica la misma lógica de redondeo en cadena.
+            // 2. Calcular PM y redondearlo.
             $pm_unrounded = $constants['a'] * pow($kloc, $constants['b']) * $eaf_for_pm;
             $pm_rounded = round($pm_unrounded, 2);
 
-            $duration = $constants['c'] * pow($pm_rounded, $constants['d']);
-            $avg_staff = (round($duration, 2) > 0) ? $pm_rounded / round($duration, 2) : 0;
-            $total_cost = $pm_rounded * $salary;
+            // 3. Calcular Duración.
+            $duration_unrounded = $constants['c'] * pow($pm_rounded, $constants['d']);
+            // 4. Truncar la Duración.
+            $duration_truncated = floor($duration_unrounded * 100) / 100;
+
+            // 5. Calcular Personal Promedio.
+            $avg_staff_unrounded = ($duration_truncated > 0) ? $pm_rounded / $duration_truncated : 0;
+            // 6. Truncar Personal.
+            $avg_staff_truncated = floor($avg_staff_unrounded * 100) / 100;
+
+            // 7. Calcular Costo Total.
+            $total_cost = $avg_staff_truncated * $salary;
 
             $results[$currentMode] = [
                 'pm_adjusted' => $pm_rounded,
-                'duration' => round($duration, 2),
-                'avg_staff' => round($avg_staff, 2),
+                'duration' => $duration_truncated,
+                'avg_staff' => $avg_staff_truncated,
                 'total_cost' => round($total_cost, 2),
             ];
         }

@@ -75,10 +75,11 @@ class CocomoCalculatorService
         ],
     ];
 
-    public function getCostDriversDefinition(): array
+     public function getCostDriversDefinition(): array
     {
         return self::COST_DRIVERS_DEFINITION;
     }
+
 
     public function calculate(string $mode, float $kloc, array $drivers, float $salary = 0): array
     {
@@ -86,39 +87,41 @@ class CocomoCalculatorService
             return $this->getEmptyResult()['main'];
         }
 
-        $eaf_unrounded = 1.0;
+        $eaf = 1.0;
         $eafDetails = [];
         foreach ($this->getCostDriversDefinition() as $driverKey => $driverData) {
             $selectedValue = $drivers[$driverKey] ?? 'nominal';
             $multiplier = $driverData['values'][$selectedValue] ?? 1.00;
-            $eaf_unrounded *= $multiplier;
+            $eaf *= $multiplier;
             $eafDetails[$driverKey] = $multiplier;
         }
 
         $constants = self::CONSTANTS[$mode];
 
-        // Se usan todos los decimales del EAF para calcular el PM.
-        $pm_unrounded = $constants['a'] * pow($kloc, $constants['b']) * $eaf_unrounded;
 
-        // Se usa el PM sin redondear para la duración.
-        $duration_unrounded = $constants['c'] * pow($pm_unrounded, $constants['d']);
+        $eaf_for_pm = floor($eaf * 100) / 100;
 
-        // Se usa PM y duración sin redondear para el personal.
-        $avg_staff_unrounded = ($duration_unrounded > 0) ? $pm_unrounded / $duration_unrounded : 0;
+        // 1. Se calcula PM (Esfuerzo) con el EAF truncado.
+        $pm_unrounded = $constants['a'] * pow($kloc, $constants['b']) * $eaf_for_pm;
 
-        // Se usa el PM sin redondear para el costo.
-        $total_cost_unrounded = $pm_unrounded * $salary;
+        // 2. Se redondea PM y este valor se usará para TODOS los demás cálculos.
+        $pm_rounded = round($pm_unrounded, 2);
 
-        // Los valores se redondean únicamente al final, para la visualización.
+        // 3. Los cálculos subsecuentes usan el PM ya redondeado.
+        $duration = $constants['c'] * pow($pm_rounded, $constants['d']);
+        $avg_staff = (round($duration, 2) > 0) ? $pm_rounded / round($duration, 2) : 0;
+        $total_cost = $pm_rounded * $salary;
+
         return [
-            'pm_adjusted' => round($pm_unrounded, 2),
-            'duration' => round($duration_unrounded, 2),
-            'avg_staff' => round($avg_staff_unrounded, 2),
-            'total_cost' => round($total_cost_unrounded, 2),
-            'eaf' => round($eaf_unrounded, 3),
+            'pm_adjusted' => $pm_rounded,
+            'duration' => round($duration, 2),
+            'avg_staff' => round($avg_staff, 2),
+            'total_cost' => round($total_cost, 2),
+            'eaf' => round($eaf, 3), // Se muestra el EAF con 3 decimales para precisión visual.
             'eaf_details' => $eafDetails,
         ];
     }
+
 
     public function calculateAllModes(float $kloc, array $drivers, float $salary = 0): array
     {
@@ -126,14 +129,17 @@ class CocomoCalculatorService
             return $this->getEmptyResult();
         }
 
-        $eaf_unrounded = 1.0;
+        $eaf = 1.0;
         $eafDetails = [];
         foreach ($this->getCostDriversDefinition() as $driverKey => $driverData) {
             $selectedValue = $drivers[$driverKey] ?? 'nominal';
             $multiplier = $driverData['values'][$selectedValue] ?? 1.00;
-            $eaf_unrounded *= $multiplier;
+            $eaf *= $multiplier;
             $eafDetails[$driverKey] = $multiplier;
         }
+
+        // Se trunca el EAF a 2 decimales.
+        $eaf_for_pm = floor($eaf * 100) / 100;
 
         $results = [];
         $modesToCalculate = ['organic', 'semidetached', 'embedded'];
@@ -141,22 +147,23 @@ class CocomoCalculatorService
         foreach ($modesToCalculate as $currentMode) {
             $constants = self::CONSTANTS[$currentMode];
 
-            
-            $pm_unrounded = $constants['a'] * pow($kloc, $constants['b']) * $eaf_unrounded;
-            $duration_unrounded = $constants['c'] * pow($pm_unrounded, $constants['d']);
-            $avg_staff_unrounded = ($duration_unrounded > 0) ? $pm_unrounded / $duration_unrounded : 0;
-            $total_cost_unrounded = $pm_unrounded * $salary;
+            // Se aplica la misma lógica de redondeo en cadena.
+            $pm_unrounded = $constants['a'] * pow($kloc, $constants['b']) * $eaf_for_pm;
+            $pm_rounded = round($pm_unrounded, 2);
 
-            // Redondeo final solo para la visualización.
+            $duration = $constants['c'] * pow($pm_rounded, $constants['d']);
+            $avg_staff = (round($duration, 2) > 0) ? $pm_rounded / round($duration, 2) : 0;
+            $total_cost = $pm_rounded * $salary;
+
             $results[$currentMode] = [
-                'pm_adjusted' => round($pm_unrounded, 2),
-                'duration' => round($duration_unrounded, 2),
-                'avg_staff' => round($avg_staff_unrounded, 2),
-                'total_cost' => round($total_cost_unrounded, 2),
+                'pm_adjusted' => $pm_rounded,
+                'duration' => round($duration, 2),
+                'avg_staff' => round($avg_staff, 2),
+                'total_cost' => round($total_cost, 2),
             ];
         }
 
-        $results['eaf'] = round($eaf_unrounded, 3);
+        $results['eaf'] = round($eaf, 3);
         $results['eaf_details'] = $eafDetails;
 
         return $results;
@@ -175,3 +182,4 @@ class CocomoCalculatorService
         ];
     }
 }
+

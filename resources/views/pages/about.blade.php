@@ -71,7 +71,7 @@
                         </p>
                         <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                            <!-- Laravel Card -->
+                            <!-- Laravel -->
                             <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:border-cyan-400">
                                 <img src="{{ asset('images/tech/laravel.png') }}" alt="Logo de Laravel" class="h-16 w-auto">
                                 <h4 class="mt-4 text-lg font-semibold text-white">Laravel</h4>
@@ -80,7 +80,7 @@
                                 <a href="https://laravel.com/docs/12.x" target="_blank" class="mt-4 text-xs font-semibold text-slate-400 hover:text-white underline">Ver Documentación &rarr;</a>
                             </div>
 
-                            <!-- Livewire Card -->
+                            <!-- Livewire -->
                             <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:border-cyan-400">
                                 <img src="{{ asset('images/tech/livewire.png') }}" alt="Logo de Livewire" class="h-16 w-auto">
                                 <h4 class="mt-4 text-lg font-semibold text-white">Livewire</h4>
@@ -89,7 +89,7 @@
                                 <a href="https://livewire.laravel.com/docs" target="_blank" class="mt-4 text-xs font-semibold text-slate-400 hover:text-white underline">Ver Documentación &rarr;</a>
                             </div>
 
-                            <!-- Alpine.js Card -->
+                            <!-- Alpine.js -->
                             <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:border-cyan-400">
                                <img src="{{ asset('images/tech/alpine.png') }}" alt="Logo de Alpine.js" class="h-16 w-auto">
                                 <h4 class="mt-4 text-lg font-semibold text-white">Alpine.js</h4>
@@ -98,7 +98,7 @@
                                 <a href="https://alpinejs.dev/start-here" target="_blank" class="mt-4 text-xs font-semibold text-slate-400 hover:text-white underline">Ver Documentación &rarr;</a>
                             </div>
 
-                            <!-- Tailwind CSS Card -->
+                            <!-- Tailwind CSS  -->
                             <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:border-cyan-400">
                                 <img src="{{ asset('images/tech/tailwind.png') }}" alt="Logo de Tailwind CSS" class="h-16 w-auto">
                                 <h4 class="mt-4 text-lg font-semibold text-white">Tailwind CSS</h4>
@@ -107,7 +107,7 @@
                                 <a href="https://tailwindcss.com/docs" target="_blank" class="mt-4 text-xs font-semibold text-slate-400 hover:text-white underline">Ver Documentación &rarr;</a>
                             </div>
 
-                            <!-- MySQL Card -->
+                            <!-- MySQL -->
                             <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700 flex flex-col items-center text-center transition-transform transform hover:scale-105 hover:border-cyan-400">
                                 <img src="{{ asset('images/tech/mysql.png') }}" alt="Logo de MySQL" class="h-16 w-auto">
                                 <h4 class="mt-4 text-lg font-semibold text-white">MySQL</h4>

@@ -8,7 +8,7 @@ use Livewire\Component;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
 
-// El nombre de la clase ahora es 'Calculator'
+
 class Calculator extends Component
 {
     public Project $project;
@@ -27,8 +27,6 @@ class Calculator extends Component
         $this->kloc = $project->kloc;
         $this->mode = $project->mode;
         $this->costDrivers = $project->cost_drivers ?? [];
-
-        // ¡CORRECCIÓN! Añadimos esta línea para cargar el salario guardado del proyecto.
         $this->salary = $project->salary;
 
         $this->driversDefinition = $cocomoService->getCostDriversDefinition();

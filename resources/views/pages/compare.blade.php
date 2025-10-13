@@ -10,7 +10,6 @@
             <div class="bg-slate-900/50 backdrop-blur-sm overflow-hidden shadow-xl sm:rounded-lg border border-slate-700">
                 <div class="p-6 text-gray-100">
 
-                    <!-- Aquí es donde vivirá nuestro componente de Livewire -->
                     @livewire('project-comparer', ['projects' => $projects])
 
                 </div>
