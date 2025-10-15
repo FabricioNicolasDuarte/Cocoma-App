@@ -28,23 +28,27 @@ WORKDIR /var/www
 # Copia los archivos de la aplicación al contenedor
 COPY . .
 
+# --- CORRECCIÓN PARA EL ERROR DE BUILD ---
+# 1. Crea el archivo .env a partir del ejemplo para que los scripts de Artisan funcionen.
+RUN cp .env.example .env
+# 2. Genera una clave de aplicación temporal para el proceso de construcción.
+#    La clave real será inyectada por Render en producción.
+RUN php artisan key:generate
+# --- FIN DE LA CORRECCIÓN ---
+
 # Instala las dependencias de Composer (sin las de desarrollo) y optimiza el autoloader
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 # Instala las dependencias de Node.js y compila los assets para producción
 RUN npm install && npm run build
 
-# --- NUEVOS COMANDOS PARA AUTOMATIZAR MIGRACIONES ---
 # Copia el script de inicio al contenedor
 COPY entrypoint.sh /usr/local/bin/
 # Le da permisos de ejecución al script
 RUN chmod +x /usr/local/bin/entrypoint.sh
 # Establece el script como el punto de entrada del contenedor
 ENTRYPOINT ["entrypoint.sh"]
-# --- FIN DE LOS NUEVOS COMANDOS ---
 
 # Expone el puerto en el que correrá la aplicación
 EXPOSE 10000
-
-# El comando CMD ya no es necesario, porque lo maneja el script entrypoint.sh
 
