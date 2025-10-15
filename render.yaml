@@ -1,22 +1,18 @@
-# render.yaml para Cocoma-App (Versión Corregida)
+# render.yaml para Cocoma-App (Versión Definitiva con Docker)
 
 # Primero, definimos los servicios (tu aplicación web)
 services:
   - type: web
     name: cocoma-app
-    runtime: php
+    # Le decimos a Render que use el Dockerfile que ya tenemos en el proyecto
+    runtime: docker
     plan: free
-    buildCommand: |
-      composer install --no-dev --optimize-autoloader
-      php artisan key:generate --force
-      php artisan config:clear
-      php artisan migrate --force
-    startCommand: php artisan serve --host 0.0.0.0 --port $PORT
+    # buildCommand y startCommand ya no son necesarios, Docker se encarga de ellos.
     envVars:
       - key: APP_URL
         value: ${RENDER_EXTERNAL_URL}
       - key: APP_KEY
-        generateValue: true
+        generateValue: true # Render gestionará la APP_KEY
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
