@@ -2,28 +2,32 @@
 
 use Illuminate\Support\Str;
 
+// --- INICIO DE LA MODIFICACIÓN PARA RENDER ---
+// Esta lógica detecta la URL de la base de datos de Render (PostgreSQL)
+// y extrae todos los parámetros de conexión directamente de ella.
+$databaseUrl = env('DATABASE_URL');
+$dbConfig = [];
+if ($databaseUrl) {
+    $dbConfig = [
+        'driver' => 'pgsql',
+        'url' => $databaseUrl,
+        'host' => parse_url($databaseUrl, PHP_URL_HOST),
+        'port' => parse_url($databaseUrl, PHP_URL_PORT),
+        'database' => ltrim(parse_url($databaseUrl, PHP_URL_PATH), '/'),
+        'username' => parse_url($databaseUrl, PHP_URL_USER),
+        'password' => parse_url($databaseUrl, PHP_URL_PASS),
+        'charset' => 'utf8',
+        'prefix' => '',
+        'prefix_indexes' => true,
+        'search_path' => 'public',
+        'sslmode' => 'prefer',
+    ];
+}
+// --- FIN DE LA MODIFICACIÓN ---
+
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Database Connection Name
-    |--------------------------------------------------------------------------
-    */
-
-    // --- SOLUCIÓN DEFINITIVA PARA RENDER ---
-    // Esta lógica comprueba si el entorno es 'production' (como siempre es en Render).
-    // Si es así, FORZA la conexión por defecto a 'pgsql', ignorando cualquier otra
-    // configuración, caché o variable de entorno conflictiva.
-    'default' => env('APP_ENV') === 'production' ? 'pgsql' : env('DB_CONNECTION', 'mysql'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Database Connections
-    |--------------------------------------------------------------------------
-    */
-
+    'default' => env('DB_CONNECTION', 'mysql'),
     'connections' => [
-
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
@@ -31,7 +35,6 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
-
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -51,8 +54,9 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-
-        'pgsql' => [
+        // --- MODIFICACIÓN PARA RENDER ---
+        // Ahora, esta conexión usará la configuración que creamos arriba si la URL existe.
+        'pgsql' => $dbConfig ?: [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -66,7 +70,7 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
-
+        // --- FIN DE LA MODIFICACIÓN ---
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
@@ -79,32 +83,14 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
-
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Migration Repository Table
-    |--------------------------------------------------------------------------
-    */
-
     'migrations' => 'migrations',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Redis Databases
-    |--------------------------------------------------------------------------
-    */
-
     'redis' => [
-
         'client' => env('REDIS_CLIENT', 'phpredis'),
-
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('APP_NAME', 'laravel').'_database_',
         ],
-
         'default' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
@@ -112,7 +98,6 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_DB', '0'),
         ],
-
         'cache' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
@@ -120,8 +105,6 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
-
     ],
-
 ];
 
