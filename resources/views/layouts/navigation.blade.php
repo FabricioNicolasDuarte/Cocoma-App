@@ -18,20 +18,9 @@
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                         {{ __('Mis Proyectos') }}
                     </x-nav-link>
-
-                    <!-- ======================================================= -->
-                    <!-- ENLACE MÓDULO IA INTEGRADO EN TU DISEÑO -->
-                    <!-- ======================================================= -->
                     <x-nav-link :href="route('ia.analyzer.index')" :active="request()->routeIs('ia.analyzer.index')">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                           <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v2.586l1.707-1.707a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L9 6.586V4a1 1 0 011-1z" clip-rule="evenodd" />
-                           <path d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
-                           <path d="M3 14a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" />
-                        </svg>
-                        {{ __('Analizador IA') }}
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>{{ __('Analizador IA') }}
                     </x-nav-link>
-                    <!-- ======================================================= -->
-
                     <x-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
                         {{ __('Comparador de Proyectos') }}
                     </x-nav-link>
@@ -41,18 +30,19 @@
                     <x-nav-link :href="route('pages.developers')" :active="request()->routeIs('pages.developers')">
                         {{ __('Desarrolladores') }}
                     </x-nav-link>
-
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-
                 <div class="relative">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-400 bg-transparent hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                <img class="h-8 w-8 rounded-full object-cover mr-2" src="{{ asset(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}">
+                                <!-- ======================================================= -->
+                                <!--          AQUÍ ESTÁ LA LÍNEA MODIFICADA                  -->
+                                <!-- ======================================================= -->
+                                <img class="h-8 w-8 rounded-full object-cover mr-2" src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}">
                                 <div>{{ Auth::user()->name }}</div>
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -66,13 +56,9 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Mi Perfil') }}
                             </x-dropdown-link>
-
-                            <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
+                                <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                                     {{ __('Cerrar Sesión') }}
                                 </x-dropdown-link>
                             </form>
@@ -105,7 +91,7 @@
             <x-responsive-nav-link :href="route('ia.analyzer.index')" :active="request()->routeIs('ia.analyzer.index')">
                 {{ __('Analizador IA') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
+             <x-responsive-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
                 {{ __('Comparador de Proyectos') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pages.about')" :active="request()->routeIs('pages.about')">
@@ -116,7 +102,6 @@
             </x-responsive-nav-link>
         </div>
 
-        <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-600">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-200">{{ Auth::user()->name }}</div>
@@ -127,13 +112,9 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Mi Perfil') }}
                 </x-responsive-nav-link>
-
-                <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                         {{ __('Cerrar Sesión') }}
                     </x-responsive-nav-link>
                 </form>
