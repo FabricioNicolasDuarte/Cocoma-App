@@ -11,12 +11,10 @@ return [
     */
 
     // --- SOLUCIÓN DEFINITIVA PARA RENDER ---
-    // Esta lógica comprueba si la variable DATABASE_URL (que solo existe en Render)
-    // contiene 'postgres'. Si es así, fuerza la conexión por defecto a 'pgsql',
-    // ignorando cualquier otra configuración o caché.
-    'default' => Str::contains(env('DATABASE_URL', ''), 'postgres')
-                    ? 'pgsql'
-                    : env('DB_CONNECTION', 'mysql'),
+    // Esta lógica comprueba si el entorno es 'production' (como siempre es en Render).
+    // Si es así, FORZA la conexión por defecto a 'pgsql', ignorando cualquier otra
+    // configuración, caché o variable de entorno conflictiva.
+    'default' => env('APP_ENV') === 'production' ? 'pgsql' : env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
