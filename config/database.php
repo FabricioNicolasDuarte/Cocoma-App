@@ -2,35 +2,17 @@
 
 use Illuminate\Support\Str;
 
-// --- INICIO DE LA MODIFICACIÓN PARA RENDER ---
-// Esta lógica detecta la URL de la base de datos de Render (PostgreSQL)
-// y configura la conexión correcta, ignorando los valores por defecto.
-$databaseUrl = env('DATABASE_URL');
-$dbConfig = [];
-if ($databaseUrl) {
-    $dbConfig = [
-        'driver' => 'pgsql',
-        'url' => $databaseUrl,
-        'host' => parse_url($databaseUrl, PHP_URL_HOST),
-        'port' => parse_url($databaseUrl, PHP_URL_PORT),
-        'database' => ltrim(parse_url($databaseUrl, PHP_URL_PATH), '/'),
-        'username' => parse_url($databaseUrl, PHP_URL_USER),
-        'password' => parse_url($databaseUrl, PHP_URL_PASS),
-        'charset' => 'utf8',
-        'prefix' => '',
-        'prefix_indexes' => true,
-        'search_path' => 'public',
-        'sslmode' => 'prefer',
-    ];
-}
-// --- FIN DE LA MODIFICACIÓN ---
-
 return [
 
     /*
     |--------------------------------------------------------------------------
     | Default Database Connection Name
     |--------------------------------------------------------------------------
+    |
+    | Here you may specify which of the database connections below you wish
+    | to use as your default connection for all database work. Of course
+    | you may use many connections at once using the Database library.
+    |
     */
 
     'default' => env('DB_CONNECTION', 'mysql'),
@@ -39,6 +21,16 @@ return [
     |--------------------------------------------------------------------------
     | Database Connections
     |--------------------------------------------------------------------------
+    |
+    | Here are each of the database connections setup for your application.
+    | Of course, examples of configuring each database platform that is
+    | supported by Laravel is shown below to make development simple.
+    |
+    |
+    | All database work in Laravel is done through the PHP PDO facilities
+    | so make sure you have the driver for your particular database of
+    | choice installed on your machine before you begin development.
+    |
     */
 
     'connections' => [
@@ -71,9 +63,7 @@ return [
             ]) : [],
         ],
 
-        // --- MODIFICACIÓN PARA RENDER ---
-        // Ahora, esta conexión usará la configuración que creamos arriba si la URL existe.
-        'pgsql' => $dbConfig ?: [
+        'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -87,7 +77,6 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
-        // --- FIN DE LA MODIFICACIÓN ---
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
@@ -100,6 +89,8 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
     ],
