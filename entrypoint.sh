@@ -6,7 +6,6 @@ php artisan optimize:clear
 
 # ¡EL PASO CLAVE!
 # Crea una nueva caché de configuración leyendo las variables de entorno de Render.
-# Esto "cocina" la configuración correcta (DB_CONNECTION=pgsql) en la aplicación.
 echo "Caching configuration for production..."
 php artisan config:cache
 
