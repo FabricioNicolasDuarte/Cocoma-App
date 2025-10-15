@@ -11,13 +11,16 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nodejs \
-    npm
+    npm \
+    # --- AÑADIMOS LA LIBRERÍA DE POSTGRESQL ---
+    libpq-dev
 
 # Limpia la caché de apt para reducir el tamaño de la imagen
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instala las extensiones de PHP más comunes para Laravel
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# --- ¡AQUÍ AÑADIMOS EL DRIVER DE POSTGRESQL! ---
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
 # Instala Composer (el gestor de dependencias de PHP)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -28,16 +31,16 @@ WORKDIR /var/www
 # Copia los archivos de la aplicación al contenedor
 COPY . .
 
-# --- CORRECCIÓN FINAL DEL PROCESO DE BUILD ---
-# 1. Crea el archivo .env a partir del ejemplo para que los scripts de Composer/Artisan funcionen.
+# --- PROCESO DE BUILD CORRECTO ---
+# 1. Crea el archivo .env a partir del ejemplo.
 RUN cp .env.example .env
 
-# 2. Instala las dependencias de Composer PRIMERO. Esto crea la carpeta /vendor.
+# 2. Instala las dependencias de Composer PRIMERO.
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-# 3. AHORA que /vendor existe, podemos generar la clave de aplicación.
+# 3. AHORA, genera la clave de aplicación.
 RUN php artisan key:generate
-# --- FIN DE LA CORRECCIÓN ---
+# --- FIN DEL PROCESO ---
 
 # Instala las dependencias de Node.js y compila los assets para producción
 RUN npm install && npm run build
