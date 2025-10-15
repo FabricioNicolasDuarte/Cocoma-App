@@ -28,16 +28,16 @@ WORKDIR /var/www
 # Copia los archivos de la aplicación al contenedor
 COPY . .
 
-# --- CORRECCIÓN PARA EL ERROR DE BUILD ---
-# 1. Crea el archivo .env a partir del ejemplo para que los scripts de Artisan funcionen.
+# --- CORRECCIÓN FINAL DEL PROCESO DE BUILD ---
+# 1. Crea el archivo .env a partir del ejemplo para que los scripts de Composer/Artisan funcionen.
 RUN cp .env.example .env
-# 2. Genera una clave de aplicación temporal para el proceso de construcción.
-#    La clave real será inyectada por Render en producción.
+
+# 2. Instala las dependencias de Composer PRIMERO. Esto crea la carpeta /vendor.
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+
+# 3. AHORA que /vendor existe, podemos generar la clave de aplicación.
 RUN php artisan key:generate
 # --- FIN DE LA CORRECCIÓN ---
-
-# Instala las dependencias de Composer (sin las de desarrollo) y optimiza el autoloader
-RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 # Instala las dependencias de Node.js y compila los assets para producción
 RUN npm install && npm run build
