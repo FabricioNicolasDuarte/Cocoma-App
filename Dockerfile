@@ -34,10 +34,17 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev
 # Instala las dependencias de Node.js y compila los assets para producción
 RUN npm install && npm run build
 
-# Expone el puerto en el que correrá la aplicación dentro del contenedor
-# Render redirigirá el tráfico externo al puerto 10000 internamente
+# --- NUEVOS COMANDOS PARA AUTOMATIZAR MIGRACIONES ---
+# Copia el script de inicio al contenedor
+COPY entrypoint.sh /usr/local/bin/
+# Le da permisos de ejecución al script
+RUN chmod +x /usr/local/bin/entrypoint.sh
+# Establece el script como el punto de entrada del contenedor
+ENTRYPOINT ["entrypoint.sh"]
+# --- FIN DE LOS NUEVOS COMANDOS ---
+
+# Expone el puerto en el que correrá la aplicación
 EXPOSE 10000
 
-# Comando para iniciar el servidor de Laravel cuando el contenedor se inicie
-# Escucha en todas las interfaces de red (--host=0.0.0.0) en el puerto 10000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
+# El comando CMD ya no es necesario, porque lo maneja el script entrypoint.sh
+
