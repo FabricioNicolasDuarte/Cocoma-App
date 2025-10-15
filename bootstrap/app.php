@@ -12,18 +12,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // --- AÑADE ESTA CONFIGURACIÓN ---
-        // Esto le dice a Laravel que confíe en los servidores proxy de Render,
-        // lo que es esencial para que funcionen las URL seguras (HTTPS) y los estilos CSS.
+        // --- CONFIGURACIÓN CORREGIDA ---
+        // Esta es la sintaxis correcta y compatible para confiar en los proxies de Render.
         $middleware->trustProxies(
-            proxies: '*',
-            headers: TrustProxies::HEADER_X_FORWARDED_FOR |
-                     TrustProxies::HEADER_X_FORWARDED_HOST |
-                     TrustProxies::HEADER_X_FORWARDED_PORT |
-                     TrustProxies::HEADER_X_FORWARDED_PROTO |
-                     TrustProxies::HEADER_X_FORWARDED_AWS_ELB
+            '*', // El primer argumento es la lista de proxies
+            TrustProxies::HEADER_X_FORWARDED_FOR |
+            TrustProxies::HEADER_X_FORWARDED_HOST |
+            TrustProxies::HEADER_X_FORWARDED_PORT |
+            TrustProxies::HEADER_X_FORWARDED_PROTO |
+            TrustProxies::HEADER_X_FORWARDED_AWS_ELB
         );
+        // -----------------------------
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
+
