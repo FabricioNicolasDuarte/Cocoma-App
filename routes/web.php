@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AIAnalysisController;
 
 
 Route::get('/', function () {
@@ -24,6 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/sobre-cocoma', [PageController::class, 'about'])->name('pages.about');
     Route::get('/developers', [PageController::class, 'developers'])->name('pages.developers');
     Route::get('/compare', [PageController::class, 'compare'])->name('pages.compare');
+    Route::get('/ia-analyzer', [AIAnalysisController::class, 'index'])->name('ia.analyzer.index');
+    Route::post('/ia-analyzer/analyze', [AIAnalysisController::class, 'analyze'])->name('ia.analyzer.analyze');
+
 });
 
 

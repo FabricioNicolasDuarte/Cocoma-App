@@ -18,6 +18,20 @@
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                         {{ __('Mis Proyectos') }}
                     </x-nav-link>
+
+                    <!-- ======================================================= -->
+                    <!-- ENLACE MÓDULO IA INTEGRADO EN TU DISEÑO -->
+                    <!-- ======================================================= -->
+                    <x-nav-link :href="route('ia.analyzer.index')" :active="request()->routeIs('ia.analyzer.index')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                           <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v2.586l1.707-1.707a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L9 6.586V4a1 1 0 011-1z" clip-rule="evenodd" />
+                           <path d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                           <path d="M3 14a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" />
+                        </svg>
+                        {{ __('Analizador IA') }}
+                    </x-nav-link>
+                    <!-- ======================================================= -->
+
                     <x-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
                         {{ __('Comparador de Proyectos') }}
                     </x-nav-link>
@@ -83,19 +97,22 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+                {{ __('Inicio') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                 {{ __('Mis Proyectos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('ia.analyzer.index')" :active="request()->routeIs('ia.analyzer.index')">
+                {{ __('Analizador IA') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
+                {{ __('Comparador de Proyectos') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pages.about')" :active="request()->routeIs('pages.about')">
                 {{ __('Sobre Cocoma') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pages.developers')" :active="request()->routeIs('pages.developers')">
                 {{ __('Developers') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('pages.compare')" :active="request()->routeIs('pages.compare')">
-                {{ __('Compare') }}
             </x-responsive-nav-link>
         </div>
 
