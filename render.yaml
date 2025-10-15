@@ -1,0 +1,53 @@
+# render.yaml para Cocoma-App
+
+services:
+  # Servicio Web para la aplicación Laravel
+  - type: web
+    name: cocoma-app
+    # Usa el entorno nativo de PHP de Render, que es más simple y confiable
+    runtime: php
+    plan: free # Usa el plan gratuito
+    buildCommand: |
+      # Comandos que se ejecutan al construir la aplicación
+      composer install --no-dev --optimize-autoloader
+      php artisan key:generate --force
+      php artisan config:clear
+      php artisan migrate --force
+    startCommand: php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      # Render inyectará la URL pública aquí automáticamente
+      - key: APP_URL
+        value: ${RENDER_EXTERNAL_URL}
+      # Render generará y gestionará la APP_KEY de forma segura
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      # Indica a Laravel que la conexión es PostgreSQL
+      - key: DB_CONNECTION
+        value: pgsql
+      # Conecta la base de datos definida abajo a esta variable
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cocoma-db
+          property: connectionString
+      # Configuración para S3 y OpenAI
+      - key: FILESYSTEM_DISK
+        value: s3
+      - key: OPENAI_API_KEY
+        sync: false # No sincronices esta clave secreta con el repo
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        sync: false
+      - key: AWS_BUCKET
+        sync: false
+
+  # Servicio de Base de Datos PostgreSQL
+  - type: psql
+    name: cocoma-db
+    plan: free # Usa el plan gratuito
