@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Limpia la caché de configuración para asegurar que se lean las variables de entorno de Render
-echo "Clearing config cache..."
-php artisan config:clear
+# Limpia TODAS las cachés de Laravel para un inicio limpio en producción
+echo "Clearing all Laravel caches..."
+php artisan optimize:clear
 
 # Ejecuta las migraciones de la base de datos de forma segura para producción
 echo "Running database migrations..."
@@ -12,4 +12,3 @@ php artisan migrate --force
 echo "Starting Laravel server..."
 php artisan serve --host=0.0.0.0 --port=10000
 
-# Probando
