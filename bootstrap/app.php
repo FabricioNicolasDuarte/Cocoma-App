@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\TrustProxies;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -10,8 +11,18 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        // --- AÑADE ESTA CONFIGURACIÓN ---
+        // Esto le dice a Laravel que confíe en los servidores proxy de Render,
+        // lo que es esencial para que funcionen las URL seguras (HTTPS) y los estilos CSS.
+        $middleware->trustProxies(
+            proxies: '*',
+            headers: TrustProxies::HEADER_X_FORWARDED_FOR |
+                     TrustProxies::HEADER_X_FORWARDED_HOST |
+                     TrustProxies::HEADER_X_FORWARDED_PORT |
+                     TrustProxies::HEADER_X_FORWARDED_PROTO |
+                     TrustProxies::HEADER_X_FORWARDED_AWS_ELB
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
